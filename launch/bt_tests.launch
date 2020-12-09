@@ -1,0 +1,5 @@
+<launch>
+  <!-- The dc motor control node -->
+  <node name="bt_tester_node" type="behavior_tester" pkg="bt_tests" output="screen">
+  </node>
+</launch>
