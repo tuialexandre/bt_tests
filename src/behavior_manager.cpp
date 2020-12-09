@@ -44,10 +44,10 @@ public:
 };
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "behavior_manager");
+    ros::init(argc, argv, "behavior_tester");
     ros::NodeHandle nh;
-    BehaviorManager bt_manager{};
-    bt_manager.Run();
+    BehaviorManager bt_tester{};
+    bt_tester.Run();
     ros::spin();
     return 0;
 }
