@@ -40,6 +40,6 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}, include/bt_tests
 )
-add_executable(behavior_tester src/behavior_manager.cpp src/dummy_nodes.cpp)
+add_executable(behavior_tester src/behavior_manager.cpp src/dummy_nodes.cpp src/movebase_node.cpp)
 
 target_link_libraries(behavior_tester ${catkin_LIBRARIES})

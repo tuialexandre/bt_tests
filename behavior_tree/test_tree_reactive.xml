@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="BehaviorTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="BehaviorTree">
+        <ReactiveSequence>
+            <Action ID="BatteryOK"/>
+            <Sequence>
+                <Action ID="SaySomething" message="Mission Started!"/>
+                <Action ID="MoveBase" goal="1;2;3"/>
+                <Action ID="SaySomething" message="Mission completed!"/>
+            </Sequence>
+        </ReactiveSequence>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="BatteryOK"/>
+        <Action ID="MoveBase">
+            <input_port name="goal"/>
+        </Action>
+        <Action ID="SaySomething">
+            <input_port default="&quot;Start thinking...&quot;" name="message"/>
+        </Action>
+        <Action ID="ThinkWhatToSay">
+            <output_port default="{the_answer}" name="text"/>
+        </Action>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>
+

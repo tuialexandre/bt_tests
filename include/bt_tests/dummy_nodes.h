@@ -6,6 +6,8 @@
 
 using namespace BT;
 
+NodeStatus CheckBattery();
+
 class ThinkWhatToSay : public SyncActionNode
 {
   public:
