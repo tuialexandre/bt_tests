@@ -27,3 +27,10 @@ BT::NodeStatus SaySomething::tick()
     std::cout << "Robot says: " << msg.value() << std::endl;
     return NodeStatus::SUCCESS;
 }
+
+void DummyNodes::RegisterNodes(BehaviorTreeFactory& factory)
+{
+    factory.registerSimpleCondition("BatteryOK", std::bind(CheckBattery));
+    factory.registerNodeType<SaySomething>("SaySomething");
+    factory.registerNodeType<ThinkWhatToSay>("ThinkWhatToSay");
+}

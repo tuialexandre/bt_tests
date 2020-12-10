@@ -3,29 +3,31 @@
 #include <ros/package.h>
 #include <iostream>
 #include <string>
-
 #include "dummy_nodes.h"
 #include "movebase_node.h"
 
+//#include "behaviortree_cpp_v3/loggers/bt_zmq_publisher.h"
+#include "behaviortree_cpp_v3/loggers/bt_file_logger.h"
+#include "behaviortree_cpp_v3/loggers/bt_cout_logger.h"
+
 class BehaviorManager {
+    const std::string pkg_name = "bt_tests";
     BT::BehaviorTreeFactory factory{};
     BT::Tree tree_sequence{};
     BT::Tree tree_reactive{};
     
     void RegisterActionNodes() {
-        factory.registerSimpleCondition("BatteryOK", std::bind(CheckBattery));
-        factory.registerNodeType<SaySomething>("SaySomething");
-        factory.registerNodeType<ThinkWhatToSay>("ThinkWhatToSay");
-        factory.registerNodeType<MoveBaseAction>("MoveBase");
+        DummyNodes::RegisterNodes(factory);
+        MoveBaseNodes::RegisterNodes(factory);
     }
 
     void LoadTree() {
-        std::string tree_path = ros::package::getPath("bt_tests");
+        std::string tree_path = ros::package::getPath(pkg_name);
         tree_path.append(R"(/behavior_tree/test_tree_sequence.xml)");
         std::cout << "Sequence tree file path: "<< tree_path  << std::endl;
         tree_sequence = factory.createTreeFromFile(tree_path);
 
-        tree_path = ros::package::getPath("bt_tests");
+        tree_path = ros::package::getPath(pkg_name);
         tree_path.append(R"(/behavior_tree/test_tree_reactive.xml)");
         std::cout << "Reactive tree file path: "<< tree_path  << std::endl;
         tree_reactive = factory.createTreeFromFile(tree_path);
@@ -35,6 +37,14 @@ class BehaviorManager {
     {
         if (!condition)
             throw RuntimeError("this is not what I expected");
+    }
+
+    void save_log(BT::Tree& tree, std::string file_name){
+        std::string log_path = ros::package::getPath(pkg_name);
+        log_path.append(R"(/log/)");
+        log_path.append(file_name);
+        log_path.append(".fbl");
+        FileLogger logger_file(tree_reactive, log_path.c_str());
     }
 
 public:
@@ -73,6 +83,16 @@ public:
 
         std::cout << "Running reactive sequence tree: " << std::endl;
 
+        // This logger publish status changes using ZeroMQ. Used by Groot
+        // PublisherZMQ publisher_zmq(tree_reactive);
+
+        // This logger saves state changes on file
+        save_log(tree_reactive, "reactive_sequence");
+
+        // This logger prints state changes on console
+        // StdCoutLogger logger_cout(tree_reactive);
+
+
         std::cout << "\n--- 1st executeTick() ---" << std::endl;
         status = tree_reactive.tickRoot();
         Assert(status == NodeStatus::RUNNING);
@@ -86,6 +106,7 @@ public:
         std::cout << "\n--- 3rd executeTick() ---" << std::endl;
         status = tree_reactive.tickRoot();
         Assert(status == NodeStatus::SUCCESS);
+
         std::cout << std::endl;
     }
 };

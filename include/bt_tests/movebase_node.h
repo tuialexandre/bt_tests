@@ -62,4 +62,10 @@ class MoveBaseAction : public BT::AsyncActionNode
     std::atomic_bool _halt_requested;
 };
 
+namespace MoveBaseNodes
+{
+// Register at once all the Actions and Conditions in this file
+void RegisterNodes(BT::BehaviorTreeFactory& factory);
+}
+
 #endif

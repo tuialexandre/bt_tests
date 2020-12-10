@@ -46,4 +46,10 @@ class SaySomething : public SyncActionNode
     NodeStatus tick() override;
 };
 
+namespace DummyNodes
+{
+// Register at once all the Actions and Conditions in this file
+void RegisterNodes(BT::BehaviorTreeFactory& factory);
+}
+
 #endif

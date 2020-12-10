@@ -29,3 +29,8 @@ void MoveBaseAction::halt()
 {
     _halt_requested.store(true);
 }
+
+void MoveBaseNodes::RegisterNodes(BehaviorTreeFactory& factory)
+{
+    factory.registerNodeType<MoveBaseAction>("MoveBase");
+}
