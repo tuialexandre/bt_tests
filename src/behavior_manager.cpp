@@ -39,12 +39,12 @@ class BehaviorManager {
             throw RuntimeError("this is not what I expected");
     }
 
-    void save_log(BT::Tree& tree, std::string file_name){
+    std::string get_log_path(std::string file_name){
         std::string log_path = ros::package::getPath(pkg_name);
         log_path.append(R"(/log/)");
         log_path.append(file_name);
         log_path.append(".fbl");
-        FileLogger logger_file(tree_reactive, log_path.c_str());
+        return log_path;
     }
 
 public:
@@ -65,6 +65,7 @@ public:
         NodeStatus status;
 
         std::cout << "Running simple sequence tree: " << std::endl;
+        FileLogger simple_tree_logger(tree_sequence, get_log_path("simple_sequence").c_str());
 
         std::cout << "\n--- 1st executeTick() ---" << std::endl;
         status = tree_sequence.tickRoot();
@@ -82,16 +83,14 @@ public:
         std::cout << std::endl;
 
         std::cout << "Running reactive sequence tree: " << std::endl;
+        // This logger saves state changes on file
+        FileLogger reactive_tree_logger(tree_reactive, get_log_path("reactive_sequence").c_str());
 
         // This logger publish status changes using ZeroMQ. Used by Groot
         // PublisherZMQ publisher_zmq(tree_reactive);
 
-        // This logger saves state changes on file
-        save_log(tree_reactive, "reactive_sequence");
-
         // This logger prints state changes on console
-        // StdCoutLogger logger_cout(tree_reactive);
-
+        //StdCoutLogger logger_cout(tree_reactive);
 
         std::cout << "\n--- 1st executeTick() ---" << std::endl;
         status = tree_reactive.tickRoot();
