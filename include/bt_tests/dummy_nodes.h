@@ -8,6 +8,21 @@ using namespace BT;
 
 NodeStatus CheckBattery();
 
+class CheckTemperature : public BT::ConditionNode
+{
+  public:
+  CheckTemperature(const std::string& name,
+                  const NodeConfiguration& config) :
+    BT::ConditionNode(name, config) {}
+
+  static PortsList providedPorts()
+  {
+    return { InputPort<double>("threshold") };
+  }
+
+  BT::NodeStatus tick() override;
+};
+
 class ThinkWhatToSay : public SyncActionNode
 {
   public:
